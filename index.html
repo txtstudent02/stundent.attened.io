@@ -23,7 +23,6 @@
     #outputs { margin-bottom: 20px; text-align: center; }
     #outputs button, #outputs input, #outputs textarea { display: block; margin: 10px auto; padding: 10px 20px; font-size: 14px; width: 100%; max-width: 300px; box-sizing: border-box; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; }
     #outputs button { background-color: #5bc0de; color: white; border: none; }
-    #description { border-top: 1px solid #ccc; padding-top: 10px; }
     #calendar { margin-top: 20px; }
     #calendar input { display: block; margin: 10px 0; padding: 10px; font-size: 14px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
     .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
@@ -119,15 +118,9 @@
   </div>
 
   <script>
-// 替換原始的 localStorage 部分
-    const users = JSON.parse(sessionStorage.getItem('users')) || [
-    { account: 'admin', password: 'a2024', isAdmin: true },
-    { account: '001', password: 'u1111', isAdmin: false },
-    { account: '002', password: 'u2222', isAdmin: false }
-];
-
-    const students = JSON.parse(sessionStorage.getItem('students')) || [];
-    const records = JSON.parse(sessionStorage.getItem('records')) || [];
+    const users = [];
+    const students = [];
+    const records = [];
     const loginArea = document.getElementById('login-area');
     const mainSystem = document.getElementById('main-system');
     const adminPanel = document.getElementById('admin-panel');
@@ -216,20 +209,35 @@
       });
     }
 
-  function saveToSessionStorage() {
-    sessionStorage.setItem('users', JSON.stringify(users));
-    sessionStorage.setItem('students', JSON.stringify(students));
-    sessionStorage.setItem('records', JSON.stringify(records));
-    sessionStorage.setItem('recipientEmail', recipientEmailInput.value.trim());
-  }
+    async function saveData() {
+      await fetch('/api/saveData', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ users, students, records })
+      });
+    }
 
-    loginButton.addEventListener('click', () => {
+    async function fetchData() {
+      const response = await fetch('/api/fetchData');
+      const data = await response.json();
+      users.push(...data.users);
+      students.push(...data.students);
+      records.push(...data.records);
+    }
+
+    loginButton.addEventListener('click', async () => {
       const account = accountInput.value.trim();
       const password = passwordInput.value.trim();
-      const user = users.find(user => user.account === account && user.password === password);
-      if (user) {
-        loggedInUser = user;
-        if (user.isAdmin) {
+
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account, password })
+      });
+
+      if (response.ok) {
+        loggedInUser = await response.json();
+        if (loggedInUser.isAdmin) {
           showAdminPanel();
         } else {
           showMainSystem();
@@ -249,15 +257,15 @@
       showLoginArea();
     });
 
-    confirmStudentsButton.addEventListener('click', () => {
+    confirmStudentsButton.addEventListener('click', async () => {
       const studentNames = studentInput.value.trim().split('\n').map(name => name.trim()).filter(name => name !== '');
       students.length = 0;
       students.push(...studentNames);
-      saveToLocalStorage();
+      await saveData();
       renderStudentButtons();
     });
 
-    registerLeaveButton.addEventListener('click', () => {
+    registerLeaveButton.addEventListener('click', async () => {
       const selectedButton = studentsDiv.querySelector('.student-btn.selected');
       if (!selectedButton) {
         alert('請選擇一位學生');
@@ -272,7 +280,7 @@
         return;
       }
       records.push({ studentIndex, date, type, duration });
-      saveToLocalStorage();
+      await saveData();
       renderRecords();
     });
 
@@ -284,9 +292,9 @@
       resetModal.style.display = 'none';
     });
 
-    resetConfirmButton.addEventListener('click', () => {
+    resetConfirmButton.addEventListener('click', async () => {
       records.length = 0;
-      saveToLocalStorage();
+      await saveData();
       renderRecords();
       resetModal.style.display = 'none';
     });
@@ -316,7 +324,7 @@
       window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     });
 
-    addUserButton.addEventListener('click', () => {
+    addUserButton.addEventListener('click', async () => {
       const newAccount = newAccountInput.value.trim();
       const newPassword = newPasswordInput.value.trim();
       if (!newAccount || !newPassword) {
@@ -324,7 +332,7 @@
         return;
       }
       users.push({ account: newAccount, password: newPassword, isAdmin: false });
-      saveToLocalStorage();
+      await saveData();
       renderAdminUserList();
     });
 
@@ -350,30 +358,5 @@
             if (accountInput.disabled) {
               user.account = accountInput.value.trim();
               user.password = passwordInput.value.trim();
-              saveToLocalStorage();
-              editButton.textContent = '編輯';
-            } else {
-              editButton.textContent = '儲存';
-            }
-          });
-          const deleteButton = document.createElement('button');
-          deleteButton.textContent = '刪除';
-          deleteButton.addEventListener('click', () => {
-            users.splice(index, 1);
-            saveToLocalStorage();
-            renderAdminUserList();
-          });
-          userRow.appendChild(accountInput);
-          userRow.appendChild(passwordInput);
-          userRow.appendChild(editButton);
-          userRow.appendChild(deleteButton);
-          adminUserList.appendChild(userRow);
-        }
-      });
-    }
-
-    recipientEmailInput.value = localStorage.getItem('recipientEmail') || '';
-    showLoginArea();
-  </script>
-</body>
-</html>
+              saveData();
+              editButton.textContent = '編
