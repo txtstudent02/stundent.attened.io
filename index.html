@@ -119,13 +119,15 @@
   </div>
 
   <script>
-    const users = JSON.parse(localStorage.getItem('users')) || [
-      { account: 'admin', password: 'a2024', isAdmin: true },
-      { account: '001', password: 'u1111', isAdmin: false },
-      { account: '002', password: 'u2222', isAdmin: false }
-    ];
-    const students = JSON.parse(localStorage.getItem('students')) || [];
-    const records = JSON.parse(localStorage.getItem('records')) || [];
+// 替換原始的 localStorage 部分
+    const users = JSON.parse(sessionStorage.getItem('users')) || [
+    { account: 'admin', password: 'a2024', isAdmin: true },
+    { account: '001', password: 'u1111', isAdmin: false },
+    { account: '002', password: 'u2222', isAdmin: false }
+];
+
+    const students = JSON.parse(sessionStorage.getItem('students')) || [];
+    const records = JSON.parse(sessionStorage.getItem('records')) || [];
     const loginArea = document.getElementById('login-area');
     const mainSystem = document.getElementById('main-system');
     const adminPanel = document.getElementById('admin-panel');
@@ -214,12 +216,12 @@
       });
     }
 
-    function saveToLocalStorage() {
-      localStorage.setItem('users', JSON.stringify(users));
-      localStorage.setItem('students', JSON.stringify(students));
-      localStorage.setItem('records', JSON.stringify(records));
-      localStorage.setItem('recipientEmail', recipientEmailInput.value.trim());
-    }
+  function saveToSessionStorage() {
+    sessionStorage.setItem('users', JSON.stringify(users));
+    sessionStorage.setItem('students', JSON.stringify(students));
+    sessionStorage.setItem('records', JSON.stringify(records));
+    sessionStorage.setItem('recipientEmail', recipientEmailInput.value.trim());
+  }
 
     loginButton.addEventListener('click', () => {
       const account = accountInput.value.trim();
