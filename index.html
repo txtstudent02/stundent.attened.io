@@ -274,6 +274,32 @@
       renderRecords();
     });
 
+	// 發送請假記錄到 Google Sheets
+  const studentName = students[studentIndex];
+  const payload = { student: studentName, date: date, type: type, duration: duration };
+
+  fetch('YOUR_GOOGLE_SCRIPT_URL', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('請假記錄已成功儲存至 Google Sheets');
+    } else {
+      alert('儲存失敗，請稍後再試');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('發生錯誤，請稍後再試');
+  });
+});
+
+
     resetRecordsButton.addEventListener('click', () => {
       resetModal.style.display = 'block';
     });
