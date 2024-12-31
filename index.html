@@ -44,12 +44,7 @@
     #admin-user-management { display: flex; flex-direction: column; align-items: center; }
     #admin-user-management input { margin: 5px 0; padding: 10px; width: 100%; max-width: 300px; }
     #admin-user-management button { margin: 10px 0; padding: 10px 20px; background-color: #5bc0de; color: white; border: none; border-radius: 5px; cursor: pointer; }
-#login-area input {
-    z-index: 10; /* 確保輸入框在其他元素之上 */
-    position: relative; /* 確保 z-index 效果 */
-}  
-
-</style>
+  </style>
 </head>
 <body>
   <h1>學生請假登記系統</h1>
@@ -123,54 +118,12 @@
     </div>
   </div>
 
-<div id="login-area">
-    <h2>歡迎使用，請先登入</h2>
-    <input type="text" id="account" placeholder="帳號">
-    <input type="password" id="password" placeholder="密碼">
-    <button id="login-button">登入</button>
-</div>
-  
   <script>
-    const accountInput = document.getElementById('account');
-const passwordInput = document.getElementById('password');
-const loginButton = document.getElementById('login-button');
-
-loginButton.addEventListener('click', () => {
-    const account = accountInput.value.trim();
-    const password = passwordInput.value.trim();
-    // 登入邏輯...
-});
-    
-  const users = []; // 初始化使用者陣列
-  // 其他變數...
-  
-  // 從 Google Sheets 獲取使用者資料
-  fetch('https://script.google.com/macros/s/AKfycbx0OgLksuX1xdMnobQweDDgrl_gej3nhkgZK8WYztBv7tBV4Ld_NqgLLEzXwWmXtvl0/exec')
-    .then(response => response.json())
-    .then(data => {
-      users.length = 0; // 清空現有使用者資料
-      data.forEach(user => users.push(user)); // 將從 Sheets 獲取的資料推入 users 陣列
-    })
-    .catch(error => {
-      console.error('Error fetching users:', error);
-    });
-
-  // 登入邏輯和其他功能...
-  loginButton.addEventListener('click', () => {
-    const account = accountInput.value.trim();
-    const password = passwordInput.value.trim();
-    const user = users.find(user => user.account === account && user.password === password);
-    if (user) {
-      loggedInUser = user;
-      if (user.isAdmin) {
-        showAdminPanel();
-      } else {
-        showMainSystem();
-      }
-    } else {
-      alert('帳號或密碼錯誤');
-    }
-  });
+    const users = JSON.parse(localStorage.getItem('users')) || [
+      { account: 'admin', password: 'a2024', isAdmin: true },
+      { account: '001', password: 'u1111', isAdmin: false },
+      { account: '002', password: 'u2222', isAdmin: false }
+    ];
     const students = JSON.parse(localStorage.getItem('students')) || [];
     const records = JSON.parse(localStorage.getItem('records')) || [];
     const loginArea = document.getElementById('login-area');
