@@ -23,7 +23,7 @@
     #outputs { margin-bottom: 20px; text-align: center; }
     #outputs button, #outputs input, #outputs textarea { display: block; margin: 10px auto; padding: 10px 20px; font-size: 14px; width: 100%; max-width: 300px; box-sizing: border-box; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; }
     #outputs button { background-color: #5bc0de; color: white; border: none; }
-    #description { border-top: 1px solid #ccc; padding-top: 10px; }a
+    #description { border-top: 1px solid #ccc; padding-top: 10px; }
     #calendar { margin-top: 20px; }
     #calendar input { display: block; margin: 10px 0; padding: 10px; font-size: 14px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
     .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
@@ -274,11 +274,12 @@
       renderRecords();
     });
 
-	// 發送請假記錄到 Google Sheets
+
+	    // 發送請假記錄到 Google Sheets
   const studentName = students[studentIndex];
   const payload = { student: studentName, date: date, type: type, duration: duration };
 
-  fetch('YOUR_GOOGLE_SCRIPT_URL', {
+  fetch('https://docs.google.com/spreadsheets/d/1ekHjOpuUy0XVMCBgfilT4ZN6Di5g6O-7sBCY4FMQP7k/edit?gid=0#gid=0', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -298,7 +299,6 @@
     alert('發生錯誤，請稍後再試');
   });
 });
-
 
     resetRecordsButton.addEventListener('click', () => {
       resetModal.style.display = 'block';
