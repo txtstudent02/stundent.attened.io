@@ -120,6 +120,16 @@
 
   <script>
     const users = []; // 初始化使用者陣列
+        // 從 Google Sheets 獲取使用者資料
+    fetch('YOUR_GOOGLE_SCRIPT_URL')
+      .then(response => response.json())
+      .then(data => {
+        users.length = 0; // 清空現有使用者資料
+        data.forEach(user => users.push(user)); // 將從 Sheets 獲取的資料推入 users 陣列
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      });
     const students = JSON.parse(localStorage.getItem('students')) || [];
     const records = JSON.parse(localStorage.getItem('records')) || [];
     const loginArea = document.getElementById('login-area');
