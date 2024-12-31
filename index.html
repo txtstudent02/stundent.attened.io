@@ -44,7 +44,12 @@
     #admin-user-management { display: flex; flex-direction: column; align-items: center; }
     #admin-user-management input { margin: 5px 0; padding: 10px; width: 100%; max-width: 300px; }
     #admin-user-management button { margin: 10px 0; padding: 10px 20px; background-color: #5bc0de; color: white; border: none; border-radius: 5px; cursor: pointer; }
-  </style>
+#login-area input {
+    z-index: 10; /* 確保輸入框在其他元素之上 */
+    position: relative; /* 確保 z-index 效果 */
+}  
+
+</style>
 </head>
 <body>
   <h1>學生請假登記系統</h1>
