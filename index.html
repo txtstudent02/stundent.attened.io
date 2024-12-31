@@ -256,23 +256,24 @@
     });
 
     registerLeaveButton.addEventListener('click', () => {
-      const selectedButton = studentsDiv.querySelector('.student-btn.selected');
-      if (!selectedButton) {
-        alert('請選擇一位學生');
-        return;
-      }
-      const studentIndex = parseInt(selectedButton.dataset.index, 10);
-      const date = leaveDateInput.value;
-      const type = leaveTypeSelect.value;
-      const duration = leaveDurationSelect.value;
-      if (!date) {
-        alert('請選擇請假日期');
-        return;
-      }
-      records.push({ studentIndex, date, type, duration });
-      saveToLocalStorage();
-      renderRecords();
-    });
+  const selectedButton = studentsDiv.querySelector('.student-btn.selected');
+  if (!selectedButton) {
+    alert('請選擇一位學生');
+    return;
+  }
+  const studentIndex = parseInt(selectedButton.dataset.index, 10);
+  const date = leaveDateInput.value;
+  const type = leaveTypeSelect.value;
+  const duration = leaveDurationSelect.value;
+  if (!date) {
+    alert('請選擇請假日期');
+    return;
+  }
+  
+  // 儲存到記錄
+  records.push({ studentIndex, date, type, duration });
+  saveToLocalStorage();
+  renderRecords();
 
 
 	    // 發送請假記錄到 Google Sheets
