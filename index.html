@@ -118,7 +118,24 @@
     </div>
   </div>
 
+<div id="login-area">
+    <h2>歡迎使用，請先登入</h2>
+    <input type="text" id="account" placeholder="帳號">
+    <input type="password" id="password" placeholder="密碼">
+    <button id="login-button">登入</button>
+</div>
+  
   <script>
+    const accountInput = document.getElementById('account');
+const passwordInput = document.getElementById('password');
+const loginButton = document.getElementById('login-button');
+
+loginButton.addEventListener('click', () => {
+    const account = accountInput.value.trim();
+    const password = passwordInput.value.trim();
+    // 登入邏輯...
+});
+    
   const users = []; // 初始化使用者陣列
   // 其他變數...
   
