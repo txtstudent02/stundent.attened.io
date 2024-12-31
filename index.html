@@ -256,50 +256,23 @@
     });
 
     registerLeaveButton.addEventListener('click', () => {
-  const selectedButton = studentsDiv.querySelector('.student-btn.selected');
-  if (!selectedButton) {
-    alert('請選擇一位學生');
-    return;
-  }
-  const studentIndex = parseInt(selectedButton.dataset.index, 10);
-  const date = leaveDateInput.value;
-  const type = leaveTypeSelect.value;
-  const duration = leaveDurationSelect.value;
-  if (!date) {
-    alert('請選擇請假日期');
-    return;
-  }
-  
-  // 儲存到記錄
-  records.push({ studentIndex, date, type, duration });
-  saveToLocalStorage();
-  renderRecords();
-
-
-	    // 發送請假記錄到 Google Sheets
-  const studentName = students[studentIndex];
-  const payload = { student: studentName, date: date, type: type, duration: duration };
-
-  fetch('https://docs.google.com/spreadsheets/d/1ekHjOpuUy0XVMCBgfilT4ZN6Di5g6O-7sBCY4FMQP7k/edit?gid=0#gid=0', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status === 'success') {
-      alert('請假記錄已成功儲存至 Google Sheets');
-    } else {
-      alert('儲存失敗，請稍後再試');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('發生錯誤，請稍後再試');
-  });
-});
+      const selectedButton = studentsDiv.querySelector('.student-btn.selected');
+      if (!selectedButton) {
+        alert('請選擇一位學生');
+        return;
+      }
+      const studentIndex = parseInt(selectedButton.dataset.index, 10);
+      const date = leaveDateInput.value;
+      const type = leaveTypeSelect.value;
+      const duration = leaveDurationSelect.value;
+      if (!date) {
+        alert('請選擇請假日期');
+        return;
+      }
+      records.push({ studentIndex, date, type, duration });
+      saveToLocalStorage();
+      renderRecords();
+    });
 
     resetRecordsButton.addEventListener('click', () => {
       resetModal.style.display = 'block';
